@@ -41,3 +41,5 @@ ShieldNex Mailbox Check validates email address formats and checks domain DNS re
 The deployed application checks SMTP connectivity on port 25 before attempting mailbox verification. The hosting provider may restrict outbound SMTP connections. When mailbox verification is unavailable, the application returns **Unknown** for valid addresses whose individual mailbox status cannot be confirmed.
 
 The application can still identify invalid email formats, nonexistent domains, and domains that do not accept email. It does not send emails or guarantee inbox delivery. A result of **Delivered** means the receiving mail server accepted the mailbox verification request; it does not guarantee final delivery.
+
+Domains that accept mail for every address (catch-all domains) are also marked Unknown, even when mailbox verification is available, because a single mailbox cannot be confirmed there. In this deployed version, “valid addresses” means addresses with a correct format on a domain that can receive email.
