@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mailbox check · ShieldNex Aerospace</title>
+<link rel="icon" href="{{ url_for('static', filename='logo.svg') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="hero">
+  <svg class="orbits" viewBox="0 0 600 300" aria-hidden="true"><g fill="none" stroke="#2DB5A9" stroke-opacity=".28"><circle cx="520" cy="60" r="90"/><circle cx="520" cy="60" r="170"/><circle cx="520" cy="60" r="260"/></g><circle cx="441" cy="103" r="5" fill="#2DB5A9"/><circle cx="388" cy="170" r="4" fill="#2DB5A9" fill-opacity=".6"/></svg>
+  <div class="wrap">
+    <a class="brand" href="/"><img src="{{ url_for('static', filename='logo.svg') }}" alt="" width="28" height="33"><span>ShieldNex Aerospace</span></a>
+    <h1>Find out which addresses will reach an inbox before you send.</h1>
+    <p>Paste a list. Each address is checked for format, domain, mail server and mailbox, then marked delivered, bounce or unknown.</p>
+  </div>
+</header>
+
+<main class="wrap bench">
+  <section class="panel input" aria-labelledby="in-h">
+    <h2 id="in-h">Addresses</h2>
+    <label for="emails" class="hint">One per line, or separated by commas. Up to <span id="max">100</span>.</label>
+    <textarea id="emails" spellcheck="false" autocomplete="off" placeholder="name@company.com"></textarea>
+    <div class="count" id="count" aria-live="polite">0 addresses</div>
+    <div class="actions">
+      <button id="run" class="btn primary" disabled>Check addresses</button>
+      <button id="sample" class="btn">Load sample</button>
+      <button id="clear" class="btn quiet">Clear</button>
+    </div>
+    <p class="note">The check stops at the mail server's answer to “would you accept this recipient?”. No message is ever sent.</p>
+    <p class="mode" id="mode"><span class="dot"></span><span id="mode-text">Checking server capabilities…</span></p>
+  </section>
+
+  <section class="panel results" aria-labelledby="out-h" id="results">
+    <h2 id="out-h">Results</h2>
+    <div id="empty">
+      <p class="hint">Every address gets one of three results.</p>
+      <dl class="legend">
+        <div><dt><span class="chip delivered">Delivered</span></dt><dd>The mail server confirmed the mailbox exists.</dd></div>
+        <div><dt><span class="chip bounce">Bounce</span></dt><dd>The address can't receive mail: bad format, a domain that doesn't exist, or a mailbox the server rejects.</dd></div>
+        <div><dt><span class="chip unknown">Unknown</span></dt><dd>The domain takes mail, but its server won't say whether this mailbox exists. Many large providers behave this way.</dd></div>
+      </dl>
+    </div>
+    <div id="live" hidden>
+      <div class="progress" id="progress-wrap"><div id="progress"></div></div>
+      <p class="status" id="status" role="status"></p>
+      <div class="bar" id="bar" aria-hidden="true"><i data-s="delivered"></i><i data-s="bounce"></i><i data-s="unknown"></i></div>
+      <div class="tools">
+        <div class="filters" role="group" aria-label="Filter results">
+          <button class="f" data-f="all" aria-pressed="true">All <b id="n-all">0</b></button>
+          <button class="f" data-f="delivered" aria-pressed="false">Delivered <b id="n-delivered">0</b></button>
+          <button class="f" data-f="bounce" aria-pressed="false">Bounce <b id="n-bounce">0</b></button>
+          <button class="f" data-f="unknown" aria-pressed="false">Unknown <b id="n-unknown">0</b></button>
+        </div>
+        <button id="export" class="btn small">Download CSV</button>
+      </div>
+      <ul class="rows" id="rows"></ul>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <details>
+    <summary>How each address is checked</summary>
+    <ol>
+      <li><b>Format.</b> One @ sign, a valid name before it, a valid domain after it.</li>
+      <li><b>Domain.</b> The domain must exist in DNS.</li>
+      <li><b>Mail server.</b> The domain must publish a mail server (MX record) and not opt out of email.</li>
+      <li><b>Mailbox.</b> We connect to that server and ask whether it would accept the recipient. We also test a made-up address on the same domain, because some domains say yes to everything. Those are marked unknown.</li>
+    </ol>
+    <p>Some hosting providers block outgoing connections to mail servers. When that happens, step 4 is skipped and the page says so above. Addresses on working domains are then marked unknown, never delivered.</p>
+  </details>
+  <p>Internship selection task for ShieldNex Aerospace.</p>
+</footer>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
